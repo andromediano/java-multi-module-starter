@@ -1,3 +1,17 @@
+### IntelliJ IDEA ###
+.idea/*
+!.idea/codeStyles/
+!.idea/inspectionProfiles/
+!.idea/runConfigurations/
+!.idea/vcs.xml
+!.idea/encodings.xml
+# JDK 이름을 팀에서 통일한다면 주석 해제
+# !.idea/misc.xml
+*.iws
+*.iml
+*.ipr
+out/
+
 # Ignore Gradle project-specific cache directory
 .gradle
 
