@@ -186,6 +186,17 @@ java -jar module-api.jar
 `src/test/resources/application.yaml`이 있으면 main의 `application.yaml`은 읽히지 않는다(같은 classpath 이름).
 테스트 전용 값은 `application-test.yaml`과 `@ActiveProfiles("test")`로 분리하는 것을 권장한다.
 
+### IntelliJ의 import 경로 오류 표시는 무시한다
+
+IntelliJ에서 `spring.config.import`의 `classpath:application-core.yaml`, `classpath:application-domain.yaml`에
+"Cannot resolve file" 오류가 표시된다.
+IntelliJ가 다른 모듈의 resources 경로를 해석하지 못해 생기는 표시일 뿐이고, 런타임에는 정상적으로 로드된다.
+
+**`optional:`을 붙여 이 표시를 없애지 않는다.**
+`optional:`이 없으면 파일이 없을 때 기동 시 바로 실패하지만, 붙이면 설정이 빠진 채로 조용히 기동된다.
+파일 이름 변경이나 모듈 의존성 정리로 파일이 빠졌을 때 알아차릴 수 없게 된다.
+표시가 거슬리면 IntelliJ에서 해당 검사만 끈다. IDE에만 영향을 주고 런타임 안전장치는 유지된다.
+
 ## 새 설정을 추가할 때
 
 | 추가할 설정 | 위치 |
