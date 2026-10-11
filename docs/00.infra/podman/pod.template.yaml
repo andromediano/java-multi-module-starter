@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: module-pod
+  labels:
+    app: module
+spec:
+  containers:
+  #
+  # POSTGRES
+  #
+  - name: postgres
+    image: docker.io/library/postgres:18-bookworm
+    env:
+    - name: POSTGRES_USER
+      valueFrom:
+        secretKeyRef:
+          name: module-secret
+          key: postgres-user
+    - name: POSTGRES_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: module-secret
+          key: postgres-password
+    - name: POSTGRES_DB
+      valueFrom:
+        secretKeyRef:
+          name: module-secret
+          key: postgres-db
+    ports:
+    - containerPort: 5432
+      hostPort: 55432
+    volumeMounts:
+    - name: postgres-data
+      mountPath: /var/lib/postgresql
+  #
+  # Redis
+  #
+  - name: redis
+    image: docker.io/library/redis:8-alpine
+    ports:
+    - containerPort: 6379
+      hostPort: 56379
+    volumeMounts:
+    - name: redis-data
+      mountPath: /data
+  #
+  # VOLUMES
+  #
+  volumes:
+  - name: postgres-data
+    emptyDir: {}
+  - name: redis-data
+    emptyDir: {}
