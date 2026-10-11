@@ -12,6 +12,7 @@ plugins {
 dependencies {
 
   // 1. 내부 프로젝트 의존성
+  implementation(project(":module-core"))
   implementation(project(":module-domain"))
 
   // 2. OAuth2 Authorization Server
