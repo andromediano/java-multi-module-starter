@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>mvptest - Home</title>
+</head>
+<body>
+<h1>Welcome</h1>
+<div th:if="${user}">
+  <p>Name: <span th:text="${user.fullName}">-</span></p>
+  <p>Email: <span th:text="${user.email}">-</span></p>
+  <p>Subject: <span th:text="${user.subject}">-</span></p>
+  <h3>ID Token</h3>
+  <textarea rows="5" cols="80" th:text="${idToken}" readonly></textarea>
+</div>
+</body>
+</html>

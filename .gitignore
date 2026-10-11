@@ -1,4 +1,6 @@
-### IntelliJ IDEA ###
+#
+# IntelliJ IDEA
+#
 .idea/*
 !.idea/codeStyles/
 !.idea/inspectionProfiles/
@@ -12,6 +14,16 @@
 *.ipr
 out/
 
+#
+# OS, Log, Backup, Swap files
+#
+.DS_Store
+*.log
+*.bak
+*.sw?
+*~
+~*
+
 # Ignore Gradle project-specific cache directory
 .gradle
 
@@ -20,3 +32,9 @@ build
 
 # Ignore Kotlin plugin data
 .kotlin
+
+#
+# Podman
+#
+pod.yaml
+secret.yaml

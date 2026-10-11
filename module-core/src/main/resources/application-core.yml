@@ -1,0 +1,103 @@
+# https://docs.spring.io/spring-boot/docs/current/reference/html/appendix-application-properties.html
+# https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config
+# https://elfinlas.github.io/2018/02/14/devnote01/
+# https://yhmane.tistory.com/74
+# https://velog.io/@hellozin/Spring-Boot에서-여러개의-Property-Yml을-적용하는-방법-xdjz1kkmbr
+# https://velog.io/@kingcjy/환경에-맞는-Spring-Profile-설정하기
+# https://supawer0728.github.io/2018/03/11/Spring-Property/
+# https://pasudo123.tistory.com/357
+# https://luvstudy.tistory.com/60
+# https://howtodoinjava.com/spring-boot2/rest/i18n-internationalization/
+# http://woowabros.github.io/study/2019/07/01/multi-module.html
+
+# 스프링부트2.4부터 멀티모듈 프로젝트에서 단순하고 합리적인 프로파일링 전략을 위한 새로운 방법을 제시했다.
+#
+# 기존에는 멀티모듈 구성시 오버라이드에 문제가 있었다. ㅌㅌㅌㅌㅌㅌ
+# 물론 기존설정을 수정하지 않고 계속 사용 할 수 있다. 특히 단일모듈 프로젝트라면 더욱 무리가 없을 것이다.
+# 하지만 멀티모듈에서
+#
+# `spring.profiles.*`은 낡은 속성이니 `spring.config.*`를 사용하자. 낡은 속성을 사용할 수 있으나 혼용해서 사용 할 경우 문제가 발생할 수 있다.
+#
+#
+# https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-Config-Data-Migration-Guide
+# https://spring.io/blog/2020/08/14/config-file-processing-in-spring-boot-2-4
+spring:
+  #profiles: development
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  mvc:
+    # https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-spring-mvc-static-content
+    static-path-pattern: /static/**
+    hiddenmethod.filter.enabled: true
+  # Thymeleaf
+  thymeleaf:
+    cache: true
+
+# Logging
+# https://www.sangkon.com/hands-on-springboot-logging/
+# https://blog.jungbin.kim/notes/2019-05-19-springboot-hikaricp-log/
+#logging:
+#    level:
+#        io.opentest: warn
+#        org.springframework: warn
+#        org.springframework.web: warn
+#        com.zaxxer.hikari: warn
+#        com.zaxxer.hikari.HikariConfig: warn
+
+# [사용자 정의 프로퍼티]
+# https://docs.spring.io/spring-boot/docs/current/reference/html/appendix-configuration-metadata.html
+# 설정파일에 속성만 정의만 해도 소스코드에서 @Value를 통해 값을 사용하는데 문제가 없다.
+# 하지만 설정파일에서 `Cannot resolve configuration property '...'`가 보기도 싫고 코드작성시 코드지원도 사용할 수 없으니 몇가지 설정을 하자.
+#
+# 먼저 속성을 정의한 POJO클래스를 작성한다. 라이브러리모듈에 공통 속성을 정의한 클래스(Settings.java)를 작성하고 어플리케이션모듈에서 상속하는식으로
+# 클래스(ApiSettings.java, AdminSettings.java)를 작성하였다.
+#
+# 라이브러리 모듈은
+#   @ConfigurationProperties를 적용할 수 없다. 적용하려고 하면 IDE가 아래 에러를 보여줄 것이다.
+#       Spring Boot Configuration Annotation Processor not configured.
+#   따라서 `spring-boot-configuration-processor`를 사용해 자동으로 메타데이터 생성을 할 수가 없다. 고민할 필요가 없다 그냥 수동으로 하자.
+#   src/main/resources/META-INF/spring-configuration-metadata.json 파일을 생성하고 위 링크를 참조하여 내용을 작성하자.
+#
+# 어플리케이션 모듈은
+#   1. build.gradle에 다음 의존성을 추가한다. 이는 @ConfigurationProperties의 메타데이터를 자동으로 생성하기 위해 필요하다.
+#       annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+#   2. Main클래스에 @EnableConfigurationProperties를 추가한다.
+#   3. build를 하면 `build/classes/java/main/META-INF/spring-configuration-metadata.json`이 생성된다.
+#   4. 이게 전부다.
+#
+# 값 우선 순위: 먼저 설정된 프로로파일 > 나중에 설정된 프로파일 > @Value에 설정된 디폴트 값
+#   https://www.baeldung.com/spring-value-defaults
+#   https://reflectoring.io/spring-boot-configuration-properties/
+#   https://namocom.tistory.com/599
+myapp:
+  default-locale: ko
+  home-dir: /home/opentest/mvptest
+  log-dir: ${myapp.home-dir}/storage/logs
+  log-file: ${myapp.log-dir}/app-${myapp.app-code}.log
+  # 메일발송후 app의 링크를 포함하기 위해 설정한다.
+  # 보통 app모듈에서 url 설정을 한다. 설정을 하지 않을 경우 core의 설정을 상속받는다.
+  # 아직은 localhost로만 운영할 api서버가 url을 설정하지 않는 경우다.
+  #url: http://localhost:${server.port}
+  domain: mvptest.kr
+  attachment-dir: ${myapp.home-dir}/storage/attachment
+  resource-server-uri: http://localhost:8093
+  recruitment-ratio: 0.5
+
+---
+
+# Default
+spring:
+  config:
+    activate:
+      on-profile: development
+  # Thymeleaf
+  thymeleaf:
+    cache: false
+
+myapp:
+  log-dir: ${HOME}/development/storage/logs
+  domain: mvptestdev.kr
+  attachment-dir: ${HOME}/development/storage/attachment
+  url: http://localhost:${server.port}

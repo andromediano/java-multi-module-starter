@@ -1,0 +1,55 @@
+spring:
+  # Datasource
+  datasource:
+    url: jdbc:postgresql://localhost:15432/mvptestdb?ssl=false
+    username: simpson
+    password: q1w2e3r4
+    # HIKARICP
+    # https://github.com/brettwooldridge/HikariCP
+    # https://www.baeldung.com/spring-boot-hikari
+    #
+    # https://effectivesquid.tistory.com/entry/HikariCP-세팅시-옵션-설명
+    # https://jojoldu.tistory.com/296
+    # https://charlie-choi.tistory.com/203
+    # https://www.javadevjournal.com/spring-boot/spring-boot-hikari/
+    #spring.datasource.driver-class-name=org.postgresql.Driver
+    #spring.datasource.hikari.jdbc-url=jdbc:postgresql://localhost:5432/opentestdb?ssl=false
+    #spring.datasource.hikari.username=insightors
+    #spring.datasource.hikari.password=q1w2e3r4
+    hikari:
+      connection-test-query: SELECT 1
+      driver-class-name: org.postgresql.Driver
+      connection-timeout: 30000
+      maximum-pool-size: 10
+      minimum-idle: 10
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      auto-commit: true
+  ## JPA
+  jpa:
+    generate-ddl: false
+    show-sql: false
+    hibernate:
+      ddl-auto: none
+
+---
+
+# Default
+spring:
+  config:
+    activate:
+      on-profile: development
+  ## JPA
+  jpa:
+    generate-ddl: true
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      # https://dzone.com/articles/50-best-performance-practices-for-hibernate-5-amp
+      hibernate.jdbc.batch_size: 100
+      # https://www.baeldung.com/hibernate-logging-levels
+      #hibernate.generate_statistics: true
+      #hibernate.format_sql: true
+      #hibernate.jdbc.lob.non_contextual_creation: true
+      #hibernate.cache.use_second_level_cache: false

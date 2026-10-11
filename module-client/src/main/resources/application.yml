@@ -1,0 +1,30 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: mvptest-client
+
+  security:
+    oauth2:
+      client:
+        registration:
+          mvptest-auth:
+            client-id: mvptest-client
+            client-secret: secret
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope:
+              - openid
+              - profile
+            client-name: mvptest Authorization Server
+        provider:
+          mvptest-auth:
+            issuer-uri: http://localhost:9000
+
+  thymeleaf:
+    cache: false
+
+logging:
+  level:
+    org.springframework.security: DEBUG

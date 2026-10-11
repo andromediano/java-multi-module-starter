@@ -17,4 +17,12 @@ plugins {
 }
 
 rootProject.name = "java-multi-module-starter"
-include("app", "list", "utilities")
+// include("app")
+// include("list")
+// include("utilities")
+include("module-core")
+include("module-domain")
+include("module-auth")
+include("module-api")
+include("module-client")
+include("module-scheduler")

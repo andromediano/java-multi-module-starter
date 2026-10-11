@@ -1,0 +1,88 @@
+{
+  "groups": [
+    {
+      "name": "myapp",
+      "type": "io.opentest.core.Settings",
+      "sourceType": "io.opentest.core.Settings"
+    }
+  ],
+  "properties": [
+    {
+      "name": "myapp.app-code",
+      "type": "java.lang.String",
+      "sourceType": "io.opentest.core.Settings"
+    },
+    {
+      "name": "myapp.default-locale",
+      "type": "java.lang.String",
+      "sourceType": "io.opentest.core.Settings"
+    },
+    {
+      "name": "myapp.ajp-host",
+      "type": "java.lang.String",
+      "description": "AJP Listener Host.",
+      "sourceType": "io.opentest.core.Settings",
+      "defaultValue": "localhost"
+    },
+    {
+      "name": "myapp.ajp-port",
+      "type": "java.lang.Integer",
+      "description": "AJP Listener Port.",
+      "sourceType": "io.opentest.core.Settings",
+      "defaultValue": 8009
+    },
+    {
+      "name": "myapp.home-dir",
+      "type": "java.lang.String",
+      "sourceType": "io.opentest.core.Settings"
+    },
+    {
+      "name": "myapp.log-dir",
+      "type": "java.lang.String",
+      "sourceType": "io.opentest.core.Settings"
+    },
+    {
+      "name": "myapp.log-file",
+      "type": "java.lang.String",
+      "sourceType": "io.opentest.core.Settings"
+    },
+    {
+      "name": "myapp.url",
+      "type": "java.lang.String",
+      "sourceType": "io.opentest.core.Settings"
+    },
+    {
+      "name": "myapp.domain",
+      "type": "java.lang.String",
+      "sourceType": "io.opentest.core.Settings"
+    },
+    {
+      "name": "myapp.patterns",
+      "type": "java.util.Map<java.lang.String,java.lang.String>",
+      "description": "뷰컨트롤러를 구성하기 위해 URL경로 또는 패턴을 키로 가지며 뷰이름을 값으로 가진다. 키는 \"[와 ]\"로 감싸야 한다.",
+      "sourceType": "io.opentest.core.Settings"
+    },
+    {
+      "name": "myapp.roles",
+      "type": "java.util.List<java.lang.String>",
+      "sourceType": "io.opentest.core.Settings"
+    },
+    {
+      "name": "myapp.attachment-dir",
+      "type": "java.lang.String",
+      "sourceType": "io.opentest.core.Settings"
+    },
+    {
+      "name": "myapp.resource-server-uri",
+      "type": "java.lang.String",
+      "description": "Resource Server URI",
+      "sourceType": "io.opentest.core.Settings"
+    },
+    {
+      "name": "myapp.recruitment-ratio",
+      "type": "java.lang.Float",
+      "sourceType": "io.opentest.core.Settings"
+    }
+  ],
+  "hints": []
+}
