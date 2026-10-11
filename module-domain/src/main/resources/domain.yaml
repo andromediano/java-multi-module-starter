@@ -1,8 +1,8 @@
 spring:
   # Datasource
   datasource:
-    url: jdbc:postgresql://localhost:55432/moduledb?ssl=false
-    username: simpson
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     # HIKARICP
     # https://github.com/brettwooldridge/HikariCP
@@ -30,15 +30,18 @@ spring:
     generate-ddl: false
     show-sql: false
     hibernate:
-      ddl-auto: none
+      ddl-auto: validate
 
 ---
 
-# Default
+# Local
 spring:
   config:
     activate:
-      on-profile: development
+      on-profile: local
+  datasource:
+    url: jdbc:postgresql://localhost:55432/moduledb?ssl=false
+    username: simpson
   ## JPA
   jpa:
     generate-ddl: true
@@ -50,6 +53,6 @@ spring:
       hibernate.jdbc.batch_size: 100
       # https://www.baeldung.com/hibernate-logging-levels
       #hibernate.generate_statistics: true
-      #hibernate.format_sql: true
+      hibernate.format_sql: true
       #hibernate.jdbc.lob.non_contextual_creation: true
       #hibernate.cache.use_second_level_cache: false

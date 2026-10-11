@@ -3,15 +3,16 @@ server:
 
 spring:
   application:
-    name: mvptest-client
-
+    name: module-client
+  profiles:
+    default: local
   security:
     oauth2:
       client:
         registration:
           mvptest-auth:
             client-id: mvptest-client
-            client-secret: secret
+            client-secret: ${OAUTH_CLIENT_SECRET}
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
             scope:
@@ -20,8 +21,24 @@ spring:
             client-name: mvptest Authorization Server
         provider:
           mvptest-auth:
-            issuer-uri: http://localhost:9000
+            issuer-uri: ${AUTH_ISSUER_URI}
 
+---
+
+# Local
+spring:
+  config:
+    activate:
+      on-profile: local
+  security:
+    oauth2:
+      client:
+        registration:
+          mvptest-auth:
+            client-secret: secret
+        provider:
+          mvptest-auth:
+            issuer-uri: http://localhost:9000
   thymeleaf:
     cache: false
 

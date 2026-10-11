@@ -1,3 +1,5 @@
 spring:
   application:
-    name: scheduler
+    name: module-scheduler
+  profiles:
+    default: local
