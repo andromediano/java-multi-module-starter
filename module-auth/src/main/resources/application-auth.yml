@@ -3,17 +3,11 @@ server:
 
 spring:
   application:
-    name: mvptest-auth
-
-  datasource:
-    url: jdbc:postgresql://localhost:5432/mvptest
-    username: mvptest
-    password: mvptest
-    driver-class-name: org.postgresql.Driver
+    name: module-auth
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     properties:
       hibernate:
         format_sql: true

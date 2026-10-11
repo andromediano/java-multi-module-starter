@@ -1,9 +1,9 @@
 spring:
   # Datasource
   datasource:
-    url: jdbc:postgresql://localhost:15432/mvptestdb?ssl=false
+    url: jdbc:postgresql://localhost:55432/moduledb?ssl=false
     username: simpson
-    password: q1w2e3r4
+    password: ${DB_PASSWORD}
     # HIKARICP
     # https://github.com/brettwooldridge/HikariCP
     # https://www.baeldung.com/spring-boot-hikari

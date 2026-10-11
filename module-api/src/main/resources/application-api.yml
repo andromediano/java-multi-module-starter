@@ -3,13 +3,7 @@ server:
 
 spring:
   application:
-    name: mvptest-api
-
-  datasource:
-    url: jdbc:postgresql://localhost:5432/mvptest
-    username: mvptest
-    password: mvptest
-    driver-class-name: org.postgresql.Driver
+    name: module-api
 
   jpa:
     hibernate:

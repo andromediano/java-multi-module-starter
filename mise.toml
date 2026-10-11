@@ -1,2 +1,5 @@
 [tools]
 java = "temurin-25"
+
+[env]
+_.file = ".env"

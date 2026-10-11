@@ -39,3 +39,8 @@ build
 #
 pod.yaml
 secret.yaml
+
+#
+# Environment variables
+#
+.env
