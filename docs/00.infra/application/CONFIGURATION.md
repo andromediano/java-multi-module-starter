@@ -6,8 +6,11 @@ Spring Boot 애플리케이션 설정 파일(`*.yaml`)의 구성 방식과 작�
 
 1. **확장자는 `.yaml`로 통일한다.** `.yml`, `.properties`를 섞어 쓰지 않는다.
 2. **실행 모듈은 `application.yaml` 하나로 구성한다.** `application-api.yaml`처럼 모듈 이름으로 파일을 나누지 않는다.
-3. **라이브러리 모듈은 고유한 이름(`core.yaml`, `domain.yaml`)을 쓰고, 실행 모듈이 `spring.config.import`로 가져온다.**
-   라이브러리 jar 안에 `application.yaml`이 있으면 classpath에서 하나만 읽혀 설정이 사라진다.
+3. **라이브러리 모듈은 `application-{모듈}.yaml`(`application-core.yaml`, `application-domain.yaml`)로 두고, 실행 모듈이 `spring.config.import`로 가져온다.**
+   - 라이브러리 jar 안에 `application.yaml`이 있으면 classpath에서 하나만 읽혀 설정이 사라진다.
+   - `application-*` 이름을 쓰는 이유는 IntelliJ가 이 이름만 Spring Boot 설정 파일로 인식해 자동완성과 검증을 해주기 때문이다.
+   - 이 이름은 Spring Boot의 프로파일 전용 파일 규칙과 같다. **`core`, `domain`을 프로파일 이름으로 쓰지 않는다.**
+     (`spring.profiles.active`, `spring.profiles.include`에 넣으면 import와 별개로 다시 로드된다)
 4. **프로파일은 실행 환경(`local`, `dev`, `prod`)만 나타낸다.** 모듈 이름을 프로파일로 쓰지 않는다.
 5. **기본 문서는 운영에 안전한 값으로 두고, `local` 문서에서만 개발 편의 설정을 켠다.**
 6. **환경마다 다른 값과 비밀값은 환경변수로 받는다.** 기본 문서에는 기본값 없이 `${DB_URL}`처럼 두어, 운영에서 누락되면 기동 시 바로 실패하게 한다.
@@ -16,10 +19,10 @@ Spring Boot 애플리케이션 설정 파일(`*.yaml`)의 구성 방식과 작�
 
 | 모듈 | 종류 | 파일 | 포트 | 가져오는 설정 |
 |---|---|---|---|---|
-| module-core | 라이브러리 | `core.yaml` | - | - |
-| module-domain | 라이브러리 | `domain.yaml` | - | - |
-| module-api | 실행 | `application.yaml` | 8090 | `core.yaml`, `domain.yaml` |
-| module-auth | 실행 | `application.yaml` | 9000 | `core.yaml`, `domain.yaml` |
+| module-core | 라이브러리 | `application-core.yaml` | - | - |
+| module-domain | 라이브러리 | `application-domain.yaml` | - | - |
+| module-api | 실행 | `application.yaml` | 8090 | `application-core.yaml`, `application-domain.yaml` |
+| module-auth | 실행 | `application.yaml` | 9000 | `application-core.yaml`, `application-domain.yaml` |
 | module-client | 실행 | `application.yaml` | 8080 | - |
 | module-scheduler | 실행 | `application.yaml` | - (웹 서버 없음) | - |
 
@@ -27,8 +30,8 @@ Spring Boot 애플리케이션 설정 파일(`*.yaml`)의 구성 방식과 작�
 
 | 파일 | 담당 |
 |---|---|
-| `core.yaml` | multipart, MVC, Thymeleaf 기본값, 사용자 정의 속성(`myapp.*`) |
-| `domain.yaml` | datasource, HikariCP, JPA/Hibernate |
+| `application-core.yaml` | multipart, MVC, Thymeleaf 기본값, 사용자 정의 속성(`myapp.*`) |
+| `application-domain.yaml` | datasource, HikariCP, JPA/Hibernate |
 | `module-api/application.yaml` | 서버 포트, 애플리케이션 이름, OAuth2 Resource Server |
 | `module-auth/application.yaml` | 서버 포트, 애플리케이션 이름 |
 | `module-client/application.yaml` | 서버 포트, 애플리케이션 이름, OAuth2 Client, Thymeleaf 캐시 |
@@ -51,8 +54,8 @@ spring:
     default: local          # 프로파일을 지정하지 않으면 local로 실행
   config:
     import:
-      - classpath:core.yaml
-      - classpath:domain.yaml
+      - classpath:application-core.yaml
+      - classpath:application-domain.yaml
   security:
     oauth2:
       resourceserver:
@@ -164,9 +167,9 @@ java -jar module-api.jar
 ### import한 파일의 값이 우선한다
 
 `spring.config.import`로 가져온 파일의 값은 가져온 쪽(`application.yaml`)보다 **우선한다**.
-`domain.yaml`에 있는 키를 실행 모듈의 `application.yaml`에서 다시 써도 덮어써지지 않는다.
+`application-domain.yaml`에 있는 키를 실행 모듈의 `application.yaml`에서 다시 써도 덮어써지지 않는다.
 
-- 라이브러리 파일(`core.yaml`, `domain.yaml`)에는 그 모듈이 책임지는 설정만 둔다.
+- 라이브러리 파일(`application-core.yaml`, `application-domain.yaml`)에는 그 모듈이 책임지는 설정만 둔다.
 - 실행 모듈마다 달라야 하는 값은 라이브러리 파일에 두지 말고, 실행 모듈 파일이나 환경변수로 넣는다.
 
 ### 파일에 `spring.profiles.active`를 쓰지 않는다
@@ -187,16 +190,16 @@ java -jar module-api.jar
 
 | 추가할 설정 | 위치 |
 |---|---|
-| DB, JPA 관련 | `domain.yaml` |
-| 여러 실행 모듈이 공통으로 쓰는 웹/MVC 설정 | `core.yaml` |
+| DB, JPA 관련 | `application-domain.yaml` |
+| 여러 실행 모듈이 공통으로 쓰는 웹/MVC 설정 | `application-core.yaml` |
 | 특정 실행 모듈에만 필요한 설정 | 그 모듈의 `application.yaml` |
 | 로컬 개발에서만 필요한 설정 | 해당 파일의 `local` 문서 |
 | 환경마다 다르거나 비밀인 값 | 환경변수(`${NAME}`) + 이 문서의 환경변수 표에 추가 |
 
 ## 남은 작업
 
-- [ ] `core.yaml` 정리: 사용하지 않는 `myapp.*` 속성, Spring Boot 2.x 시절 주석, 정의되지 않은 `${myapp.app-code}` 참조
-- [ ] `core.yaml`의 `on-profile: development` 문서를 `local`로 변경(현재 활성화되지 않음)
+- [ ] `application-core.yaml` 정리: 사용하지 않는 `myapp.*` 속성, Spring Boot 2.x 시절 주석, 정의되지 않은 `${myapp.app-code}` 참조
+- [ ] `application-core.yaml`의 `on-profile: development` 문서를 `local`로 변경(현재 활성화되지 않음)
 - [ ] `spring.messages.basename`에 `validation` 추가(`validation.properties`가 로드되지 않음)
 - [ ] 테스트 설정을 `application-test.yaml`로 분리하거나 Testcontainers(`@ServiceConnection`) 도입
 - [ ] 운영 스키마 관리를 위한 마이그레이션 도구(Flyway 등) 도입

@@ -8,8 +8,8 @@ spring:
     default: local
   config:
     import:
-      - classpath:core.yaml
-      - classpath:domain.yaml
+      - classpath:application-core.yaml
+      - classpath:application-domain.yaml
   security:
     oauth2:
       resourceserver:
