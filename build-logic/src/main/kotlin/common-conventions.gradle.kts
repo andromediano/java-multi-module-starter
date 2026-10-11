@@ -7,6 +7,9 @@
 plugins {
     // Apply the java Plugin to add support for Java.
     java
+
+    // Apply the checkstyle plugin to check code style with config/checkstyle/checkstyle.xml.
+    checkstyle
 }
 
 repositories {
@@ -31,6 +34,11 @@ testing {
                 useJUnitJupiter("6.0.1")
             }
     }
+}
+
+checkstyle {
+    // Keep in sync with the CheckStyle-IDEA plugin version.
+    toolVersion = "14.3.0"
 }
 
 // Apply a specific Java toolchain to ease working on different environments.

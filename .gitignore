@@ -7,6 +7,7 @@
 !.idea/runConfigurations/
 !.idea/vcs.xml
 !.idea/encodings.xml
+!.idea/checkstyle-idea.xml
 # JDK 이름을 팀에서 통일한다면 주석 해제
 # !.idea/misc.xml
 *.iws
