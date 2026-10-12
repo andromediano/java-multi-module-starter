@@ -1,0 +1,24 @@
+# 최상위 파일 명시 (상위 디렉토리 탐색 중단)
+root = true
+
+# 모든 파일에 적용하는 기본 규칙
+[*]
+charset = utf-8
+end_of_line = lf
+trim_trailing_whitespace = true
+insert_final_newline = true
+indent_style = space
+indent_size = 2
+tab_width = 2
+
+[*.java]
+ij_continuation_indent_size = 4
+
+[{*.kt,*.kts}]
+ij_continuation_indent_size = 4
+
+[{*.xml,*.yml,*.yaml,*.json}]
+ij_continuation_indent_size = 4
+
+[{Makefile,*.go}]
+indent_style = tab

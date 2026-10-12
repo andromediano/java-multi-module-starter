@@ -3,10 +3,10 @@
  */
 
 plugins {
-    id("common-conventions")
-    alias(libs.plugins.spring.boot)
-    alias(libs.plugins.spring.dependency.management)
-    alias(libs.plugins.freefair.lombok)
+  id("common-conventions")
+  alias(libs.plugins.spring.boot)
+  alias(libs.plugins.spring.dependency.management)
+  alias(libs.plugins.freefair.lombok)
 }
 
 dependencies {
