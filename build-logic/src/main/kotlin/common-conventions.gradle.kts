@@ -5,45 +5,45 @@
  */
 
 plugins {
-    // Apply the java Plugin to add support for Java.
-    java
+  // Apply the java Plugin to add support for Java.
+  java
 
-    // Apply the checkstyle plugin to check code style with config/checkstyle/checkstyle.xml.
-    checkstyle
+  // Apply the checkstyle plugin to check code style with config/checkstyle/checkstyle.xml.
+  checkstyle
 }
 
 repositories {
-    // Use Maven Central for resolving dependencies.
-    mavenCentral()
+  // Use Maven Central for resolving dependencies.
+  mavenCentral()
 }
 
 dependencies {
-    constraints {
-        // Define dependency versions as constraints
-        implementation("org.apache.commons:commons-text:1.14.0")
-    }
-    testImplementation("org.assertj:assertj-core:3.27.7")
+  constraints {
+    // Define dependency versions as constraints
+    implementation("org.apache.commons:commons-text:1.14.0")
+  }
+  testImplementation("org.assertj:assertj-core:3.27.7")
 }
 
 testing {
-    suites {
-        // Configure the built-in test suite
-        val test =
-            named<JvmTestSuite>("test") {
-                // Use JUnit Jupiter test framework
-                useJUnitJupiter("6.0.1")
-            }
-    }
+  suites {
+    // Configure the built-in test suite
+    val test =
+      named<JvmTestSuite>("test") {
+        // Use JUnit Jupiter test framework
+        useJUnitJupiter("6.0.1")
+      }
+  }
 }
 
 checkstyle {
-    // Keep in sync with the CheckStyle-IDEA plugin version.
-    toolVersion = "14.3.0"
+  // Keep in sync with the CheckStyle-IDEA plugin version.
+  toolVersion = "14.3.0"
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
 java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(25)
-    }
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(25)
+  }
 }
