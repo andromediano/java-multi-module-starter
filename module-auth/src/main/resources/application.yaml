@@ -10,6 +10,33 @@ spring:
     import:
       - classpath:application-core.yaml
       - classpath:application-domain.yaml
+  security:
+    oauth2:
+      authorizationserver:
+        # 토큰의 iss 클레임과 Discovery 문서에 쓰인다. 요청의 Host 헤더로 추론하지 않도록 명시한다.
+        issuer: ${AUTH_ISSUER_URI}
+
+---
+
+# Local 외 환경: 고정된 토큰 서명 키를 사용한다.
+# local 프로파일은 서명 키를 설정하지 않으므로 기동할 때마다 새 키가 생성된다.
+spring:
+  config:
+    activate:
+      on-profile: "!local"
+  ssl:
+    bundle:
+      pem:
+        jwk:
+          keystore:
+            # 파일 경로(file:...) 또는 PEM 내용을 직접 넣는다.
+            certificate: ${JWK_CERTIFICATE}
+            private-key: ${JWK_PRIVATE_KEY}
+
+myapp:
+  auth:
+    # 토큰 서명 키를 담은 SSL 번들 이름
+    jwk-ssl-bundle: jwk
 
 ---
 
@@ -18,6 +45,10 @@ spring:
   config:
     activate:
       on-profile: local
+  security:
+    oauth2:
+      authorizationserver:
+        issuer: http://localhost:9000
 
 logging:
   level:

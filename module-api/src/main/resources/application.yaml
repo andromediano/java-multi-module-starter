@@ -14,7 +14,10 @@ spring:
     oauth2:
       resourceserver:
         jwt:
+          # 토큰의 iss 클레임을 검증한다.
           issuer-uri: ${AUTH_ISSUER_URI}
+          # 서명 키 위치를 지정하면 기동 시 Discovery 요청 없이 검증할 수 있다.
+          jwk-set-uri: ${AUTH_ISSUER_URI}/oauth2/jwks
 
 ---
 
@@ -28,6 +31,7 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: http://localhost:9000
+          jwk-set-uri: http://localhost:9000/oauth2/jwks
 
 logging:
   level:
