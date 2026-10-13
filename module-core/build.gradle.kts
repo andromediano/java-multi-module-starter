@@ -20,8 +20,7 @@ tasks.named<Jar>("jar") {
 }
 
 dependencies {
-  implementation("org.springframework.boot:spring-boot-starter-web")
+  implementation("org.springframework.boot:spring-boot-starter-webmvc")
   implementation("org.springframework.boot:spring-boot-starter-validation")
-  implementation("com.fasterxml.jackson.core:jackson-databind")
-  testImplementation("org.assertj:assertj-core")
+  implementation("tools.jackson.core:jackson-databind")
 }

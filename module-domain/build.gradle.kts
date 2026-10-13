@@ -39,7 +39,7 @@ dependencies {
   // 2. 외부 라이브러리 및 프레임워크
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
   implementation("org.springframework.boot:spring-boot-starter-validation")
-  implementation("org.springframework.boot:spring-boot-starter-web")
+  implementation("org.springframework.boot:spring-boot-starter-webmvc")
   implementation(libs.guava)
   implementation(libs.querydsl.apt)
   implementation(libs.querydsl.jpa)
@@ -57,7 +57,6 @@ dependencies {
   runtimeOnly(libs.postgresql)
 
   // 5. 테스트 관련 (Test Scope)
-  testImplementation("org.springframework.boot:spring-boot-starter-test")
-  testImplementation("org.springframework.boot:spring-boot-data-jpa-test")
+  testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
   testAnnotationProcessor(libs.mapstruct.processor)
 }
