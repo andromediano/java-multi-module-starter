@@ -15,10 +15,13 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-webmvc")
   implementation("org.springframework.boot:spring-boot-starter-security-oauth2-client")
 
-  // 2. Thymeleaf
+  // 2. Resource Server API 호출 (HTTP Service Client)
+  implementation("org.springframework.boot:spring-boot-starter-restclient")
+
+  // 3. Thymeleaf
   implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 
-  // 3. 테스트
+  // 4. 테스트
   testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
   testImplementation("org.springframework.boot:spring-boot-starter-security-oauth2-client-test")
 }

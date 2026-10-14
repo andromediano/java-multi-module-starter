@@ -13,19 +13,29 @@ spring:
           mvptest-auth:
             client-id: mvptest-client
             client-secret: ${OAUTH_CLIENT_SECRET}
+            client-authentication-method: client_secret_basic
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
             scope:
               - openid
               - profile
+              - email
             client-name: mvptest Authorization Server
         provider:
           mvptest-auth:
+            # 기동 시 Discovery 문서를 읽어 엔드포인트를 설정한다. Authorization Server를 먼저 띄운다.
             issuer-uri: ${AUTH_ISSUER_URI}
+  http:
+    serviceclient:
+      # ApiClient(Resource Server) 연결 설정
+      api:
+        base-url: ${API_BASE_URL}
 
 ---
 
 # Local
+# 브라우저에서 http://127.0.0.1:8080 으로 접속한다. localhost로 접속하면 Authorization Server(localhost:9000)와
+# 세션 쿠키가 섞여 로그인이 실패한다(쿠키는 포트를 구분하지 않는다).
 spring:
   config:
     activate:
@@ -39,6 +49,10 @@ spring:
         provider:
           mvptest-auth:
             issuer-uri: http://localhost:9000
+  http:
+    serviceclient:
+      api:
+        base-url: http://localhost:8090
   thymeleaf:
     cache: false
 

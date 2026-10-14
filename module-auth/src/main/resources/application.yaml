@@ -16,6 +16,11 @@ spring:
         # 토큰의 iss 클레임과 Discovery 문서에 쓰인다. 요청의 Host 헤더로 추론하지 않도록 명시한다.
         issuer: ${AUTH_ISSUER_URI}
 
+myapp:
+  auth:
+    # access token의 aud 클레임. Resource Server는 이 값으로 자신을 위한 토큰인지 검증한다.
+    access-token-audiences: mvptest-api
+
 ---
 
 # Local 외 환경: 고정된 토큰 서명 키를 사용한다.
@@ -49,6 +54,13 @@ spring:
     oauth2:
       authorizationserver:
         issuer: http://localhost:9000
+
+myapp:
+  auth:
+    local-client:
+      # module-client 주소. 로그인 후 돌아갈 redirect_uri가 된다.
+      # 쿠키는 포트를 구분하지 않으므로 localhost(인증 서버)와 다른 호스트(127.0.0.1)를 사용한다.
+      base-url: http://127.0.0.1:8080
 
 logging:
   level:

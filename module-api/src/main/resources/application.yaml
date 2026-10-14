@@ -18,6 +18,8 @@ spring:
           issuer-uri: ${AUTH_ISSUER_URI}
           # 서명 키 위치를 지정하면 기동 시 Discovery 요청 없이 검증할 수 있다.
           jwk-set-uri: ${AUTH_ISSUER_URI}/oauth2/jwks
+          # 토큰의 aud 클레임에 이 API가 있어야 한다. 다른 서비스용으로 발급된 토큰을 거부한다.
+          audiences: mvptest-api
 
 ---
 

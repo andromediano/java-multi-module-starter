@@ -1,11 +1,20 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title>mvptest - OAuth2 Client</title>
 </head>
 <body>
 <h1>mvptest OAuth2 Client</h1>
-<p><a th:href="@{/home}">Login with Authorization Server</a></p>
+<div th:if="${user == null}">
+  <p><a th:href="@{/home}">로그인</a></p>
+</div>
+<div th:if="${user != null}">
+  <p><span th:text="${user.fullName ?: user.subject}">사용자</span>님으로 로그인했습니다.</p>
+  <p><a th:href="@{/home}">내 정보</a></p>
+  <form th:action="@{/logout}" method="post">
+    <button type="submit">로그아웃</button>
+  </form>
+</div>
 </body>
 </html>

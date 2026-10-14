@@ -1,17 +1,31 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title>mvptest - Home</title>
 </head>
 <body>
-<h1>Welcome</h1>
-<div th:if="${user}">
-  <p>Name: <span th:text="${user.fullName}">-</span></p>
-  <p>Email: <span th:text="${user.email}">-</span></p>
-  <p>Subject: <span th:text="${user.subject}">-</span></p>
-  <h3>ID Token</h3>
-  <textarea rows="5" cols="80" th:text="${idToken}" readonly></textarea>
-</div>
+<h1>내 정보</h1>
+
+<h2>OIDC 사용자 (ID token + UserInfo)</h2>
+<dl>
+  <dt>Subject</dt>
+  <dd th:text="${user.subject}">-</dd>
+  <dt>로그인 아이디</dt>
+  <dd th:text="${user.preferredUsername}">-</dd>
+  <dt>이름</dt>
+  <dd th:text="${user.fullName}">-</dd>
+  <dt>이메일</dt>
+  <dd th:text="${user.email}">-</dd>
+</dl>
+
+<h2>Resource Server 응답 (GET /api/users/me)</h2>
+<pre th:if="${me != null}" th:text="${me}">-</pre>
+<p th:if="${apiError != null}" th:text="${apiError}">-</p>
+
+<form th:action="@{/logout}" method="post">
+  <button type="submit">로그아웃</button>
+</form>
+<p><a th:href="@{/}">처음으로</a></p>
 </body>
 </html>

@@ -1,0 +1,26 @@
+# 테스트는 Authorization Server 없이 실행하므로 Discovery(issuer-uri) 대신 엔드포인트를 직접 지정한다.
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          mvptest-auth:
+            client-id: mvptest-client
+            client-secret: secret
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope:
+              - openid
+              - profile
+              - email
+        provider:
+          mvptest-auth:
+            authorization-uri: http://auth.opentest.test/oauth2/authorize
+            token-uri: http://auth.opentest.test/oauth2/token
+            jwk-set-uri: http://auth.opentest.test/oauth2/jwks
+            user-info-uri: http://auth.opentest.test/userinfo
+            user-name-attribute: sub
+  http:
+    serviceclient:
+      api:
+        base-url: http://api.opentest.test
