@@ -34,6 +34,10 @@ build
 # Ignore Kotlin plugin data
 .kotlin
 
+# test
+coverage/
+.playwright-mcp
+
 #
 # Podman
 #
