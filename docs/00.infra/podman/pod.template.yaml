@@ -45,10 +45,43 @@ spec:
     - name: redis-data
       mountPath: /data
   #
+  # Neo4j
+  #
+  - name: neo4j
+    image: docker.io/library/neo4j:5-community
+    env:
+    - name: NEO4J_AUTH
+      valueFrom:
+        secretKeyRef:
+          name: module-secret
+          key: neo4j-auth
+    - name: NEO4J_PLUGINS
+      value: '["apoc"]'
+    - name: NEO4J_server_memory_heap_initial__size
+      value: 512m
+    - name: NEO4J_server_memory_heap_max__size
+      value: 1G
+    - name: NEO4J_server_memory_pagecache_size
+      value: 512m
+    ports:
+    - containerPort: 7474
+      hostPort: 57474
+    - containerPort: 7687
+      hostPort: 57687
+    volumeMounts:
+    - name: neo4j-data
+      mountPath: /data
+    - name: neo4j-logs
+      mountPath: /logs
+  #
   # VOLUMES
   #
   volumes:
   - name: postgres-data
     emptyDir: {}
   - name: redis-data
+    emptyDir: {}
+  - name: neo4j-data
+    emptyDir: {}
+  - name: neo4j-logs
     emptyDir: {}
