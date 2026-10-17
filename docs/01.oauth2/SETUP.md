@@ -8,7 +8,7 @@
 
 ## 실행
 
-PostgreSQL을 띄우고(`docs/00.infra/podman`) `.env`에 `DB_PASSWORD`를 채운 뒤, 아래 순서로 실행한다.
+루트 `.env`를 채우고 PostgreSQL을 띄운 뒤(`docs/00.infra/podman/SETUP.md`), 아래 순서로 실행한다.
 module-client는 기동할 때 Authorization Server의 Discovery 문서를 읽으므로 module-auth를 먼저 띄운다.
 
 ```sh
@@ -42,7 +42,7 @@ local 프로파일에서 module-auth가 클라이언트(`mvptest-client`)와 adm
 
 | 모듈 | 변수 | 설명 |
 |------|------|------|
-| 공통 | `DB_URL`, `DB_USERNAME`, `DB_PASSWORD` | 데이터베이스 |
+| 공통 | `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USERNAME`, `DB_PASSWORD` | 데이터베이스 |
 | module-auth | `AUTH_ISSUER_URI` | issuer (예: `https://auth.example.com`) |
 | module-auth | `JWK_CERTIFICATE`, `JWK_PRIVATE_KEY` | 토큰 서명 키 PEM (파일 경로 또는 내용) |
 | module-api | `AUTH_ISSUER_URI` | 토큰 발급자 |

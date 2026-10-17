@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# .env 값으로 *.template.yaml을 치환해 podman kube play에 넘길 YAML을 만든다.
+# 프로젝트 루트 .env 값으로 *.template.yaml을 치환해 podman kube play에 넘길 YAML을 만든다.
 # 값이 빠졌거나 잘못되면 파일을 만들지 않고 실패한다.
 #
-# 사용법: ./render.sh [env 파일] [출력 디렉터리]
-#   기본값은 이 스크립트 옆의 .env와 이 스크립트가 있는 디렉터리다.
+# 사용법: render.sh [env 파일] [출력 디렉터리]
+#   기본값은 프로젝트 루트의 .env와 이 스크립트가 있는 디렉터리다.
 set -euo pipefail
 
 # 셸에 export된 같은 이름의 변수가 섞이지 않도록 빈 환경에서 다시 실행한다
@@ -12,12 +12,13 @@ if [[ -z "${RENDER_CLEAN_ENV:-}" ]]; then
 fi
 
 script_dir="$(cd "$(dirname "$0")" && pwd)"
-env_file="${1:-$script_dir/.env}"
+root_dir="$(cd "$script_dir/../../.." && pwd)"
+env_file="${1:-$root_dir/.env}"
 out_dir="${2:-$script_dir}"
 
 if [[ ! -f "$env_file" ]]; then
   echo "env 파일이 없다: $env_file" >&2
-  echo "  cp .env.example .env 후 값을 채운다" >&2
+  echo "  프로젝트 루트에서 cp .env.example .env 후 값을 채운다" >&2
   exit 1
 fi
 

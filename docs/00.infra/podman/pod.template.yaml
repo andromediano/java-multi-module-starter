@@ -39,7 +39,7 @@ spec:
           key: postgres-db
     ports:
     - containerPort: 5432
-      hostPort: ${POSTGRES_PORT}
+      hostPort: ${DB_PORT}
     volumeMounts:
     - name: postgres-data
       mountPath: /var/lib/postgresql
