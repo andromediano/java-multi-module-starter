@@ -1,87 +1,125 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: module-pod
+  name: ${PROJECT}-pod
   labels:
-    app: module
+    app: ${PROJECT}
 spec:
+  # 파드가 API 서버와 통신할 필요가 없다면, 보안을 위해 토큰이 자동으로 마운트되는 것을 막을 수 있다.
+  automountServiceAccountToken: false
   containers:
-  #
+  # ----------------------------------------------------------------------------
   # POSTGRES
-  #
+  # ----------------------------------------------------------------------------
   - name: postgres
     image: docker.io/library/postgres:18-bookworm
+    resources:
+      requests:
+        cpu: 250m
+        memory: 256Mi
+        ephemeral-storage: 1Gi
+      limits:
+        memory: 1Gi
+        ephemeral-storage: 4Gi
     env:
     - name: POSTGRES_USER
       valueFrom:
         secretKeyRef:
-          name: module-secret
+          name: ${PROJECT}-secret
           key: postgres-user
     - name: POSTGRES_PASSWORD
       valueFrom:
         secretKeyRef:
-          name: module-secret
+          name: ${PROJECT}-secret
           key: postgres-password
     - name: POSTGRES_DB
       valueFrom:
         secretKeyRef:
-          name: module-secret
+          name: ${PROJECT}-secret
           key: postgres-db
     ports:
     - containerPort: 5432
-      hostPort: 55432
+      hostPort: ${POSTGRES_PORT}
     volumeMounts:
     - name: postgres-data
       mountPath: /var/lib/postgresql
-  #
+  # ----------------------------------------------------------------------------
   # Redis
-  #
+  # ----------------------------------------------------------------------------
   - name: redis
     image: docker.io/library/redis:8-alpine
+    resources:
+      requests:
+        cpu: 100m
+        memory: 64Mi
+        ephemeral-storage: 256Mi
+      limits:
+        memory: 256Mi
+        ephemeral-storage: 1Gi
     ports:
     - containerPort: 6379
-      hostPort: 56379
+      hostPort: ${REDIS_PORT}
     volumeMounts:
     - name: redis-data
       mountPath: /data
-  #
+  # ----------------------------------------------------------------------------
   # Neo4j
-  #
+  # ----------------------------------------------------------------------------
   - name: neo4j
-    image: docker.io/library/neo4j:5-community
+    image: docker.io/library/neo4j:5.26-community
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+        ephemeral-storage: 1Gi
+      limits:
+        # 힙(1G) + 페이지 캐시(512m) + JVM/네이티브 오버헤드를 감안한 값
+        memory: 2560Mi
+        ephemeral-storage: 4Gi
     env:
+    # 형식은 "<user>/<password>" 한 문자열. 비밀번호는 8자 이상이어야 한다
     - name: NEO4J_AUTH
       valueFrom:
         secretKeyRef:
-          name: module-secret
+          name: ${PROJECT}-secret
           key: neo4j-auth
-    - name: NEO4J_PLUGINS
-      value: '["apoc"]'
+    # 메모리 (개발용 보수적 설정 — 데이터 커지면 상향)
     - name: NEO4J_server_memory_heap_initial__size
       value: 512m
     - name: NEO4J_server_memory_heap_max__size
       value: 1G
     - name: NEO4J_server_memory_pagecache_size
       value: 512m
+    # 호스트 포트를 바꿨으므로 Browser가 접속할 Bolt 주소를 알려준다
+    - name: NEO4J_server_bolt_advertised__address
+      value: "localhost:${NEO4J_BOLT_PORT}"
+    # 플러그인 (GraphRAG/지식그래프 용도면 APOC 유용. 불필요하면 제거)
+    - name: NEO4J_PLUGINS
+      value: '["apoc"]'
+    - name: NEO4J_dbms_security_procedures_unrestricted
+      value: "apoc.*"
     ports:
-    - containerPort: 7474
-      hostPort: 57474
-    - containerPort: 7687
-      hostPort: 57687
+    - containerPort: 7474 # HTTP (Neo4j Browser)
+      hostPort: ${NEO4J_HTTP_PORT}
+    - containerPort: 7687 # Bolt (드라이버 접속)
+      hostPort: ${NEO4J_BOLT_PORT}
     volumeMounts:
     - name: neo4j-data
       mountPath: /data
     - name: neo4j-logs
       mountPath: /logs
-  #
+  # ----------------------------------------------------------------------------
   # VOLUMES
-  #
+  # ----------------------------------------------------------------------------
   volumes:
   - name: postgres-data
-    emptyDir: {}
+    persistentVolumeClaim:
+      claimName: ${PROJECT}-postgres-data
   - name: redis-data
     emptyDir: {}
   - name: neo4j-data
-    emptyDir: {}
+    persistentVolumeClaim:
+      claimName: ${PROJECT}-neo4j-data
   - name: neo4j-logs
-    emptyDir: {}
+    persistentVolumeClaim:
+      claimName: ${PROJECT}-neo4j-logs
