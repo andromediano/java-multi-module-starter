@@ -64,6 +64,7 @@ module-client, module-scheduler : 내부 모듈 의존 없음
 ├── gradle/libs.versions.toml  # 의존성 버전 카탈로그
 ├── module-*/                  # 각 모듈
 ├── .env.example               # 로컬 환경변수 예시 (앱과 Podman이 함께 읽는다)
+├── gradle.properties          # group, version, Gradle 빌드 옵션
 ├── mise.toml                  # Java 버전, .env 로딩
 └── settings.gradle.kts        # 루트 프로젝트명, 모듈 목록
 ```
@@ -116,44 +117,52 @@ podman kube play docs/00.infra/podman/pod.yaml
 
 1. **복제 후 Git 이력을 끊는다.**
 
-   ```sh
-   git clone --depth 1 git@github.com:andromediano/java-multi-module-starter.git <프로젝트명>
-   cd <프로젝트명>
-   rm -rf .git
-   ```
+```sh
+git clone --depth 1 git@github.com:andromediano/java-multi-module-starter.git <프로젝트명>
+cd <프로젝트명>
+rm -rf .git
+```
 
 2. **이름을 바꾼다.**
-   - `settings.gradle.kts`의 `rootProject.name`
-   - 패키지 디렉터리 `src/{main,test}/java/io/opentest/**`와 모든 `package`·`import` 선언
-   - `@SpringBootApplication(scanBasePackages = "io.opentest")` 등 패키지 문자열
-   - 각 `build.gradle.kts`의 저작권 헤더(`OPENTEST`)
-   - `application*.yaml`의 `opentest` 흔적, `.idea/codeStyles/Project.xml`의 import 레이아웃 패키지
-   - `.env`의 `PROJECT` (Podman 리소스 접두어)
-   - 현재 루트 `group`이 지정되어 있지 않으므로, 배포가 필요하면 convention plugin에 `group`을 추가한다.
+- `settings.gradle.kts`의 `rootProject.name`
+- 패키지 디렉터리 `src/{main,test}/java/io/opentest/**`와 모든 `package`·`import` 선언
+- `@SpringBootApplication(scanBasePackages = "io.opentest")` 등 패키지 문자열
+- 각 `build.gradle.kts`의 저작권 헤더(`OPENTEST`)
+- `application*.yaml`의 `opentest` 흔적, `.idea/codeStyles/Project.xml`의 import 레이아웃 패키지
+- `.env`의 `PROJECT` (Podman 리소스 접두어)
+- `gradle.properties`의 `group` (필요하면 `version`도)
 
 3. **모듈을 정리한다.** 쓰지 않는 예시 모듈은 디렉터리와 `include`를 함께 삭제한다. 모듈 이름을 바꾸면 `project(":...")` 참조도 함께 바꾼다.
 
 4. **문서를 새 프로젝트에 맞춘다.**
-   - `README.md`를 새 프로젝트 소개로 다시 쓴다.
-   - `AGENTS.md`에서 "스타터로 새 프로젝트 만들기" 섹션을 지우고 "공통 규칙"만 남긴다.
+- `README.md`를 새 프로젝트 소개로 다시 쓴다.
+- `AGENTS.md`에서 "스타터로 새 프로젝트 만들기" 섹션을 지우고 "공통 규칙"만 남긴다.
 
 5. **흔적을 확인한다.** 아래 결과가 비어 있어야 한다.
 
-   ```sh
-   grep -rn -i "opentest\|java-multi-module-starter" --exclude-dir={.git,.gradle,build} .
-   ```
+```sh
+grep -rn -i "opentest\|java-multi-module-starter" --exclude-dir={.git,.gradle,build} .
+```
 
 6. **빌드를 통과시킨다.**
 
-   ```sh
-   ./gradlew build
-   ```
+```sh
+./gradlew build
+```
+
+```sh
+./gradlew clean build -x test
+```
+
+```sh
+./gradlew clean build -x test --rerun-tasks
+```
 
 7. **새 저장소로 시작한다.**
 
-   ```sh
-   git init && git add . && git commit -m "chore: 스타터에서 <프로젝트명> 프로젝트를 생성한다"
-   ```
+```sh
+git init && git add . && git commit -m "chore: 스타터에서 <프로젝트명> 프로젝트를 생성한다"
+```
 
 ## 코딩 에이전트 지침
 
@@ -179,5 +188,4 @@ podman kube play docs/00.infra/podman/pod.yaml
 ## 앞으로 할 일
 
 - [ ] 프로젝트명·groupId·패키지를 입력받아 치환하는 생성 스크립트
-- [ ] 루트 `group` / `version` 설정을 convention plugin으로 정리
 - [ ] 예시 모듈 선택 설치(필요한 실행 모듈만 남기기) 지원

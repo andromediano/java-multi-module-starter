@@ -166,7 +166,7 @@ DB_NAME=<db> \
 DB_USERNAME=<user> \
 DB_PASSWORD=<password> \
 AUTH_ISSUER_URI=https://<auth-host> \
-java -jar module-api.jar
+java -jar module-api-0.0.1-SNAPSHOT.jar
 ```
 
 비밀값은 K8s Secret, Vault 등으로 주입한다. 파일로 마운트된 secret은 `spring.config.import: optional:configtree:/run/secrets/`로 읽을 수 있다.
